@@ -33,6 +33,7 @@ ez_systems_poll_show:
 
 ### Some of the available blocks
 ```
+{% raw %}
 {% block body_class %}
 
 {% block breadcrumbs %}
@@ -40,6 +41,7 @@ ez_systems_poll_show:
 {% block page_title %}
 
 {% block content %}
+{% endraw %}
 ```
 
 

@@ -345,12 +345,13 @@ services:
 ### Add Field definition edit view
 ```twig
 {# AppBundle/Resources/views/platformui/content_type/edit/ezpoll.html.twig #}
-
+{% raw %}
 {% block ezpoll_field_definition_edit %}
     <div class="ezpoll-validator answer_limit{% if group_class is not empty %} {{ group_class }}{% endif %}">
         {{- form_row(form.answerLimit) -}}
     </div>
 {% endblock %}
+{% endraw %}
 ```
 
 

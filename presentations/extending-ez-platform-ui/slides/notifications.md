@@ -64,6 +64,7 @@ class Renderer implements NotificationRenderer {
 
 ```twig
 {# Resources/views/notification/notification_row.html.twig #}
+{% raw %}
 {% extends '@EzPlatformAdminUi/notifications/notification_row.html.twig' %}
 
 {% block icon %}
@@ -71,6 +72,7 @@ class Renderer implements NotificationRenderer {
 
 {% block message %}
 {% endblock %}
+{% endraw %}
 ```
 
 

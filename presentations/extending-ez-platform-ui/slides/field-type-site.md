@@ -97,6 +97,7 @@ services:
 
 ```twig
 {# Resources/views/ezpoll_view.html.twig #}
+{% raw %}
 {% extends "EzPublishCoreBundle::content_fields.html.twig" %}
 
 {% block ezpoll_field %}
@@ -108,6 +109,8 @@ services:
     {{ form_widget(parameters.pollForm) }}
     ...
 {% endblock %}
+{% endraw %}
+
 ```
 
 
