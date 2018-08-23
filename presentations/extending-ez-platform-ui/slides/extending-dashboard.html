@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Extending Dashboard | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Extending Dashboard" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/extending-dashboard.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/extending-dashboard.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/extending-dashboard.html","headline":"Extending Dashboard","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="extending-dashboard">Extending Dashboard</h2>
+<h3 id="creating-a-dashboard-tab">Creating a Dashboard tab</h3>
+
+<h3 id="we-will-fetch-all-polls-added-to-content-types">We will fetch all polls added to Content Types</h3>
+<h4 id="and-add-them-to-the-everyone-tab-in-the-dashboard">and add them to the <code class="highlighter-rouge">Everyone</code> tab in the Dashboard</h4>
+
+<h4 id="register-everyonepolltab-as-a-tab">Register <code class="highlighter-rouge">EveryonePollTab</code> as a tab</h4>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+<span class="na">services</span><span class="pi">:</span>
+    <span class="s">...</span>
+    <span class="s">AppBundle\Tab\Dashboard\Everyone\EveryonePollTab</span><span class="pi">:</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ezplatform.tab</span><span class="pi">,</span> <span class="nv">group</span><span class="pi">:</span> <span class="nv">dashboard-everyone</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h4 id="create-a-tab">Create a tab</h4>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Tab/Dashboard/Everyone/EveryonePollTab.php
+</span>
+<span class="k">use</span> <span class="nx">EzSystems\EzPlatformAdminUi\Tab\AbstractTab</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">EzSystems\EzPlatformAdminUi\Tab\OrderedTabInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">EveryoneArticleTab</span> <span class="k">extends</span> <span class="nx">AbstractTab</span> <span class="k">implements</span> <span class="nx">OrderedTabInterface</span>
+</code></pre></div></div>
+
+<p>Create <code class="highlighter-rouge">ContentToPollDataMapper</code>: for ease of use we create a mapper which extracts polls from content.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Tab/Dashboard/ContentToPollDataMapper.php
+</span>
+<span class="sd">/** @var \eZ\Publish\Core\Repository\Values\Content\Content $content */</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$pager</span> <span class="k">as</span> <span class="nv">$content</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$content</span><span class="o">-&gt;</span><span class="na">getFields</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$field</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$field</span><span class="o">-&gt;</span><span class="na">fieldTypeIdentifier</span> <span class="o">===</span> <span class="s1">'ezpoll'</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$data</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">'contentId'</span> <span class="o">=&gt;</span> <span class="nv">$content</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span>
+                <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="nv">$contentInfo</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">,</span>
+                <span class="o">...</span>
+                <span class="s1">'question'</span> <span class="o">=&gt;</span> <span class="nv">$field</span><span class="o">-&gt;</span><span class="na">value</span><span class="o">-&gt;</span><span class="na">question</span><span class="p">,</span>
+                <span class="s1">'answers'</span> <span class="o">=&gt;</span> <span class="nv">$field</span><span class="o">-&gt;</span><span class="na">value</span><span class="o">-&gt;</span><span class="na">answers</span><span class="p">,</span>
+            <span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="create-a-template">Create a template</h3>
+<p>We can copy one of the existing Dashboard templates and change it to display poll data.</p>
+
+<div class="language-twig highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">{# Resources/views/dashboard/tab/all_poll.html.twig #}</span>
+</code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

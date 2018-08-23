@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Data visualization | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Data visualization" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/data-visualization.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/data-visualization.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/data-visualization.html","headline":"Data visualization","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="data-visualization">Data visualization</h2>
+<h3 id="creating-a-poll-list">Creating a poll list</h3>
+
+<h3 id="bootstrap">Bootstrap</h3>
+<p>We rely on Bootstrap’s framework which makes eZ Platform UI easier to extend. It facilitates adapting and styling the interface to your needs.</p>
+
+<h3 id="add-routing-to-list">Add routing to list</h3>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">ez_systems_poll_list</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span>     <span class="s">/poll/list</span>
+    <span class="na">defaults</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">_controller</span><span class="pi">:</span> <span class="nv">AppBundle</span><span class="pi">:</span><span class="nv">Poll</span><span class="pi">:</span><span class="nv">list</span> <span class="pi">}</span>
+
+<span class="na">ez_systems_poll_show</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span>     <span class="s">/poll/show/{fieldId}/{contentId}</span>
+    <span class="na">defaults</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">_controller</span><span class="pi">:</span> <span class="nv">AppBundle</span><span class="pi">:</span><span class="nv">Poll</span><span class="pi">:</span><span class="nv">show</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="create-a-controller">Create a controller</h3>
+<h4 id="it-will-extend-the-ezplatformadminuibundle-controller">It will extend the <code class="highlighter-rouge">EzPlatformAdminUiBundle</code> controller</h4>
+
+<h3 id="add-a-template">Add a template</h3>
+<h4 id="to-easily-customize-the-list-view-to-the-appearance-of-the-admin-panel-it-should-extend">To easily customize the list view to the appearance of the Admin Panel it should extend:</h4>
+<div class="language-twig highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">{%</span> <span class="k">extends</span> <span class="s1">'@ezdesign/layout.html.twig'</span> <span class="cp">%}</span>
+
+</code></pre></div></div>
+
+<h3 id="some-of-the-available-blocks">Some of the available blocks</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+{% block body_class %}
+
+{% block breadcrumbs %}
+
+{% block page_title %}
+
+{% block content %}
+
+</code></pre></div></div>
+
+<h3 id="pagination">Pagination</h3>
+<h4 id="to-handle-pagination-we-are-using-whiteoctoberpagerfantabundle-which-is-a-great-library-for-pagination">To handle pagination we are using <code class="highlighter-rouge">WhiteOctoberPagerfantaBundle</code>, which is a great library for pagination.</h4>
+
+<p><a href="https://github.com/whiteoctober/WhiteOctoberPagerfantaBundle">white-october/pagerfanta-bundle</a></p>
+
+<h3 id="in-the-same-way-we-can-add-detail-view-for-the-poll">In the same way we can add detail view for the poll.</h3>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

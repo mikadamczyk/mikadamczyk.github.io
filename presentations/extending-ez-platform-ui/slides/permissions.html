@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Custom permissions | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Custom permissions" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html","headline":"Custom permissions","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="custom-permissions">Custom permissions</h2>
+<h3 id="roles-policies-and-limitations">Roles, Policies and Limitations</h3>
+
+<p>A bundle can expose Policies via a <code class="highlighter-rouge">PolicyProvider</code> which can be added to <code class="highlighter-rouge">EzPublishCoreBundle</code>’s DIC extension.</p>
+
+<h3 id="pollpolicyprovider">PollPolicyProvider</h3>
+<h4 id="must-implement-policyproviderinterface">must implement <code class="highlighter-rouge">PolicyProviderInterface</code></h4>
+
+<h3 id="poll-policy-configuration-hash">Poll Policy configuration hash</h3>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[</span>
+        <span class="s1">'poll'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'list'</span> <span class="o">=&gt;</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s1">'show'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'Question'</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="integrating-the-policyprovider-into-ezpublishcorebundle">Integrating the <code class="highlighter-rouge">PolicyProvider</code> into <code class="highlighter-rouge">EzPublishCoreBundle</code></h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        // Retrieve "ezpublish" container extension.
+        $eZExtension = $container-&gt;getExtension('ezpublish');
+
+        // Add the policy provider.
+        $eZExtension-&gt;addPolicyProvider(
+            new PollPolicyProvider()
+        );
+    }
+</code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

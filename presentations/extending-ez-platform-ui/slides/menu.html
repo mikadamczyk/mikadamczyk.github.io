@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Menus | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Menus" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/menu.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/menu.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/menu.html","headline":"Menus","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="menus">Menus</h2>
+<h3 id="built-on-top-of-knpmenubundle-and-easily-extensible">Built on top of KnpMenuBundle and easily extensible</h3>
+
+<h3 id="event-subscribers-and-listeners">Event subscribers and listeners</h3>
+<p>You can hook into the following events:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ConfigureMenuEvent::MAIN_MENU</code></li>
+  <li><code class="highlighter-rouge">ConfigureMenuEvent::USER_MENU</code></li>
+  <li><code class="highlighter-rouge">ConfigureMenuEvent::CONTENT_SIDEBAR_RIGHT</code></li>
+  <li><code class="highlighter-rouge">ConfigureMenuEvent::USER_MENU</code></li>
+</ul>
+
+<p>and a lot more…</p>
+
+<h3 id="an-event-must-implement-eventsubscriberinterface">An event must implement <code class="highlighter-rouge">EventSubscriberInterface</code></h3>
+<h4 id="symfonycomponenteventdispatchereventsubscriberinterface"><code class="highlighter-rouge">Symfony\Component\EventDispatcher\EventSubscriberInterface</code></h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nv">$menu</span> <span class="o">=</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">getMenu</span><span class="p">();</span>
+    <span class="nv">$menu</span><span class="o">-&gt;</span><span class="na">addChild</span><span class="p">(</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">ITEM_POLL_LIST</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="s1">'route'</span> <span class="o">=&gt;</span> <span class="s1">'ez_systems_poll_list'</span><span class="p">,</span>
+            <span class="s1">'extras'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'translation_domain'</span> <span class="o">=&gt;</span> <span class="s1">'menu'</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">);</span>
+</code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

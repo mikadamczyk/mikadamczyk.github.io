@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Field Type | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Field Type" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/field-type-backoffice.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/field-type-backoffice.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/field-type-backoffice.html","headline":"Field Type","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="field-type">Field Type</h2>
+<h3 id="backoffice">backoffice</h3>
+
+<h3 id="the-value-class">The Value class</h3>
+<p>represents an instance of the Field Type within a Content item</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/Value.php
+</span>
+<span class="k">use</span> <span class="nx">eZ\Publish\Core\FieldType\Value</span> <span class="k">as</span> <span class="nx">BaseValue</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Value</span> <span class="k">extends</span> <span class="nx">BaseValue</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="the-value-class-will-contain-at-least">The Value class will contain at least:</h4>
+
+<ul>
+  <li>public properties: used to store the actual data</li>
+  <li>an implementation of <code class="highlighter-rouge">__toString()</code></li>
+</ul>
+
+<h3 id="the-type-class">The Type class</h3>
+<p>contains the logic of the Field Type<br />
+e.g. validating and transforming data</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/Type.php
+</span>
+<span class="k">use</span> <span class="nx">eZ\Publish\Core\FieldType\FieldType</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">eZ\Publish\SPI\FieldType\Nameable</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Type</span> <span class="k">extends</span> <span class="nx">FieldType</span> <span class="k">implements</span> <span class="nx">Nameable</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="identification-method">Identification method</h3>
+<ul>
+  <li><code class="highlighter-rouge">getFieldTypeIdentifier()</code> returns the string that uniquely identifies the Field Type</li>
+</ul>
+
+<h3 id="value-handling-methods">Value handling methods</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">createValueFromInput()</code> provides convenient way to set an attribute’s value using the API</li>
+  <li><code class="highlighter-rouge">checkValueStructure()</code> checks that the Value fed to the Type is acceptable</li>
+</ul>
+
+<h3 id="value-initialization">Value initialization</h3>
+<ul>
+  <li><code class="highlighter-rouge">getEmptyValue()</code> provides what is considered an empty value of this type</li>
+</ul>
+
+<h3 id="validation">Validation</h3>
+<ul>
+  <li><code class="highlighter-rouge">validate()</code> runs the validation on data, when a Content item is created with a Field of this type</li>
+</ul>
+
+<h3 id="metadata-handling-methods">Metadata handling methods</h3>
+<ul>
+  <li><code class="highlighter-rouge">getFieldName()</code> generates a name out of a Field value</li>
+  <li><code class="highlighter-rouge">getSortInfo()</code> is used by the persistence layer to obtain the value it can use to sort and filter on a Field of this Field Type</li>
+</ul>
+
+<h3 id="serialization-methods">serialization methods</h3>
+<ul>
+  <li><code class="highlighter-rouge">fromHash()</code> builds a hash with every property from <code class="highlighter-rouge">Value</code></li>
+  <li><code class="highlighter-rouge">toHash()</code> instantiates a <code class="highlighter-rouge">Value</code> with the hash it receives</li>
+</ul>
+
+<h3 id="persistencevalue"><code class="highlighter-rouge">PersistenceValue</code></h3>
+<h4 id="structure-understood-by-the-persistence-layer">structure understood by the persistence layer</h4>
+
+<p>This is a simple value object with three properties:</p>
+<ul>
+  <li>data</li>
+  <li>externalData</li>
+  <li>sortKey</li>
+</ul>
+
+<h3 id="persistence-methods">Persistence methods</h3>
+<ul>
+  <li><code class="highlighter-rouge">fromPersistenceValue()</code> builds a hash with every property from <code class="highlighter-rouge">Value</code></li>
+  <li><code class="highlighter-rouge">toPersistenceValue()</code> instantiates a <code class="highlighter-rouge">Value</code> with the hash it receives</li>
+</ul>
+
+<h3 id="deprecated">deprecated</h3>
+<ul>
+  <li><code class="highlighter-rouge">getName()</code> replaced by <code class="highlighter-rouge">getFieldName()</code></li>
+</ul>
+
+<h3 id="field-type-as-a-service">Field Type as a service</h3>
+
+<blockquote>
+  <p>to be closer to kernel best practices, you should declare the Field Type services in a custom fieldtypes.yml file</p>
+</blockquote>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/DependencyInjection/AppExtension
+</span>
+<span class="nv">$loader</span><span class="o">-&gt;</span><span class="na">load</span><span class="p">(</span><span class="s1">'fieldtypes.yml'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="field-type-as-a-service-1">Field Type as a service</h3>
+<h5 id="each-service-tagged-as-ezpublishfieldtype-is-added-to-a-registry-using-the-alias-argument-as-its-unique-identifier">Each service tagged as <code class="highlighter-rouge">ezpublish.fieldType</code> is added to a registry using the alias argument as its unique identifier</h5>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundle/Resources/config/fieldtypes.yml</span>
+
+<span class="na">services</span><span class="pi">:</span>
+    <span class="s">AppBundle\eZ\Publish\FieldType\Poll\Type</span><span class="pi">:</span>
+        <span class="na">parent</span><span class="pi">:</span> <span class="s">ezpublish.fieldType</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">name</span><span class="pi">:</span> <span class="nv">ezpublish.fieldType</span><span class="pi">,</span> <span class="nv">alias</span><span class="pi">:</span> <span class="nv">ezpoll</span><span class="pi">}</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">name</span><span class="pi">:</span> <span class="nv">ezpublish.fieldType.nameable</span><span class="pi">,</span> <span class="nv">alias</span><span class="pi">:</span> <span class="nv">ezpoll</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="legacy-storage-engine-converter">Legacy Storage Engine Converter</h3>
+<h4 id="we-need-to-map-each-field-type-value-to-something-legacy-storage-engine-can-understand">we need to map each Field Type value to something Legacy storage engine can understand</h4>
+
+<h3 id="polllegacyconverter"><code class="highlighter-rouge">Poll\LegacyConverter</code></h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//AppBundle/eZ/Publish/FieldType/PollLegacyConverter.php
+</span>
+<span class="k">namespace</span> <span class="nx">AppBundle\eZ\Publish\FieldType\Poll</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">LegacyConverter</span> <span class="k">implements</span> <span class="nx">Converter</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="converter-interface">Converter interface</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">toStorageValue()</code> and <code class="highlighter-rouge">toFieldValue()</code> used to convert between an API field value and legacy storage value</li>
+  <li><code class="highlighter-rouge">toStorageFieldDefinition()</code> and <code class="highlighter-rouge">toFieldDefinition()</code> used to convert between a Field definition and a legacy one</li>
+  <li><code class="highlighter-rouge">getIndexColumn()</code> tells the API which legacy database field should be used to sort and filter content</li>
+</ul>
+
+<h3 id="registering-the-converter">Registering the converter</h3>
+<h5 id="legacy-converter-needs-to-be-registered-and-tagged-in-the-service-container">Legacy Converter needs to be registered and tagged in the service container</h5>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundle/Resources/config/fieldtypes.yml</span>
+<span class="na">services</span><span class="pi">:</span>
+    <span class="s">...</span>
+    <span class="s">AppBundle\eZ\Publish\FieldType\Poll\LegacyConverter</span><span class="pi">:</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">name</span><span class="pi">:</span> <span class="nv">ezpublish.storageEngine.legacy.converter</span><span class="pi">,</span> <span class="nv">alias</span><span class="pi">:</span> <span class="nv">ezpoll</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="introduce-a-template">Introduce a template</h3>
+<h4 id="template-must">template must:</h4>
+<ul>
+  <li>extend <code class="highlighter-rouge">EzPublishCoreBundle::content_fields.html.twig</code></li>
+  <li>define a dedicated Twig block for the type, named by convention <TypeIdentifier_field></TypeIdentifier_field></li>
+  <li>be registered in parameters</li>
+</ul>
+
+<h3 id="ezpollhtmltwig-template"><code class="highlighter-rouge">ezpoll.html.twig</code> template</h3>
+<ul>
+  <li>Each Field Type template receives a set of variables e.g. <code class="highlighter-rouge">field</code>, <code class="highlighter-rouge">content</code>.</li>
+  <li><code class="highlighter-rouge">field</code> is an instance of <code class="highlighter-rouge">eZ\Publish\API\Repository\Values\Content\Field</code>.</li>
+  <li>Field Value is available through the <code class="highlighter-rouge">value</code> property.</li>
+</ul>
+
+<h3 id="registering-the-template">Registering the template</h3>
+<h4 id="field-type-template-needs-to-be-registered-in-the-ez-platform-semantic-configuration">Field Type template needs to be registered in the eZ Platform semantic configuration.</h4>
+
+<p><code class="highlighter-rouge">PrependExtensionInterface</code> from <code class="highlighter-rouge">Symfony\Component\DependencyInjection\Extension\</code> will let us prepend bundle configuration.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nx">AppBundle\DependencyInjection</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\DependencyInjection\Extension</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">AppExtension</span> <span class="k">extends</span> <span class="nx">Extension</span> <span class="k">implements</span> <span class="nx">PrependExtensionInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">prepend</span><span class="p">(</span><span class="nx">ContainerBuilder</span> <span class="nv">$container</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$configFilePath</span> <span class="o">=</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">'/../Resources/config/ez_field_templates.yml'</span><span class="p">;</span>
+        <span class="nv">$config</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="o">::</span><span class="na">parse</span><span class="p">(</span><span class="nb">file_get_contents</span><span class="p">(</span><span class="nv">$configFilePath</span><span class="p">));</span>
+        <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">prependExtensionConfig</span><span class="p">(</span><span class="s1">'ezpublish'</span><span class="p">,</span> <span class="nv">$config</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="template-mapping">Template mapping</h3>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundle/Resources/config/ez_field_templates.yml</span>
+<span class="na">system</span><span class="pi">:</span>
+    <span class="na">admin_group</span><span class="pi">:</span>
+        <span class="na">field_templates</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">template</span><span class="pi">:</span> <span class="s1">'</span><span class="s">AppBundle:platformui/field:ezpoll_view.html.twig'</span><span class="pi">,</span> <span class="nv">priority</span><span class="pi">:</span> <span class="nv">0</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>we do</p>
+
+<h3 id="adding-and-editing-the-field-in-back-office">Adding and editing the Field in Back Office</h3>
+
+<p>We need to create a <code class="highlighter-rouge">FormMapper</code> with <code class="highlighter-rouge">FieldValueFormMapperInterface</code>. It is used to automatically add the input field to the Content Type edit form.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/FormMapper.php
+</span><span class="k">public</span> <span class="k">function</span> <span class="nf">mapFieldValueForm</span><span class="p">(</span><span class="nx">FormInterface</span> <span class="nv">$fieldForm</span><span class="p">,</span> <span class="nx">FieldData</span> <span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="nv">$fieldForm</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span>
+        <span class="nv">$formConfig</span><span class="o">-&gt;</span><span class="na">getFormFactory</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">createBuilder</span><span class="p">()</span>
+            <span class="o">-&gt;</span><span class="na">create</span><span class="p">(</span><span class="s1">'value'</span><span class="p">,</span> <span class="nx">PollFieldType</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="p">[</span>
+                <span class="s1">'required'</span> <span class="o">=&gt;</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s1">'label'</span> <span class="o">=&gt;</span> <span class="nv">$label</span><span class="p">,</span>
+                <span class="s1">'answer_limit'</span> <span class="o">=&gt;</span> <span class="nv">$answerLimit</span><span class="p">,</span>
+            <span class="p">])</span>
+            <span class="c1">// Deactivate auto-initialize as we're not on the root form.
+</span>            <span class="o">-&gt;</span><span class="na">setAutoInitialize</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">getForm</span><span class="p">()</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="register-the-formmapper-as-a-service">Register the FormMapper as a service</h3>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundle/Resources/config/fieldtypes.yml</span>
+<span class="na">services</span><span class="pi">:</span>
+    <span class="s">...</span>
+    <span class="s">AppBundle\eZ\Publish\FieldType\Poll\FormMapper</span><span class="pi">:</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">name</span><span class="pi">:</span> <span class="nv">ez.fieldFormMapper.value</span><span class="pi">,</span> <span class="nv">fieldType</span><span class="pi">:</span> <span class="nv">ezpoll</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="datatransformer">DataTransformer</h3>
+<h4 id="tells-the-formmapper-how-to-transform-between-the-value-object-and-hash">tells the <code class="highlighter-rouge">FormMapper</code> how to transform between the value object and hash.</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nx">AppBundle\Form</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Symfony\Component\Form\DataTransformerInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PollValueTransformer</span> <span class="k">implements</span> <span class="nx">DataTransformerInterface</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="add-the-datatransformer-to-formmapper">Add the <code class="highlighter-rouge">DataTransformer</code> to <code class="highlighter-rouge">FormMapper</code></h4>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/FormMapper.php
+</span>
+<span class="nv">$formConfig</span><span class="o">-&gt;</span><span class="na">addModelTransformer</span><span class="p">(</span>
+    <span class="k">new</span> <span class="nx">PollValueTransformer</span><span class="p">(</span><span class="nv">$fieldType</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="add-a-validation">Add a validation</h4>
+
+<ul>
+  <li>add <code class="highlighter-rouge">validateValidatorConfiguration()</code> and <code class="highlighter-rouge">validate()</code> methods in the Type class</li>
+  <li>implement an additional interface in the FormMapper</li>
+  <li>add Field definition edit view</li>
+  <li>implement <code class="highlighter-rouge">toStorageFieldDefinition()</code> and <code class="highlighter-rouge">toFieldDefinition()</code> methods in LegacyConverter</li>
+</ul>
+
+<p><code class="highlighter-rouge">validateValidatorConfiguration()</code> is called when an instance of the Field Type is added to a Content Type, to ensure that the validator configuration is valid.</p>
+
+<h3 id="validator-schema-configuration">Validator schema configuration</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/Type.php
+</span>
+<span class="k">protected</span> <span class="nv">$validatorConfigurationSchema</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'QuestionLengthValidator'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'minStringLength'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+            <span class="s1">'default'</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h4 id="validatevalidatorconfiguration"><code class="highlighter-rouge">validateValidatorConfiguration()</code></h4>
+
+<p>We will iterate over the items in <code class="highlighter-rouge">$validatorConfiguration</code> and</p>
+<ul>
+  <li>add errors for validators you don’t know about;</li>
+  <li>check that provided arguments are known and valid</li>
+</ul>
+
+<h4 id="validate-is-the-method-that-runs-the-actual-validation-on-data"><code class="highlighter-rouge">validate()</code> is the method that runs the actual validation on data</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/Type.php
+</span>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">(</span><span class="nx">FieldDefinition</span> <span class="nv">$fieldDefinition</span><span class="p">,</span> <span class="nx">SPIValue</span> <span class="nv">$fieldValue</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$validationErrors</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="nv">$validatorConfiguration</span> <span class="o">=</span> <span class="nv">$fieldDefinition</span><span class="o">-&gt;</span><span class="na">getValidatorConfiguration</span><span class="p">();</span>
+    <span class="nv">$questionLengthConstraints</span> <span class="o">=</span> <span class="nv">$validatorConfiguration</span><span class="p">[</span><span class="s1">'QuestionLengthValidator'</span><span class="p">]</span> <span class="o">??</span> <span class="p">[];</span>
+
+        <span class="o">...</span>
+        <span class="nv">$validationErrors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationError</span><span class="p">(</span>
+        <span class="o">...</span>
+        
+    <span class="k">return</span> <span class="nv">$validationErrors</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Implement <code class="highlighter-rouge">FieldDefinitionFormMapperInterface</code> in FormMapper
+that allows us to define the necessary input field.</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle/eZ/Publish/FieldType/Poll/FormMapper.php
+</span>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">mapFieldDefinitionForm</span><span class="p">(</span><span class="nx">FormInterface</span> <span class="nv">$fieldDefinitionForm</span><span class="p">,</span> <span class="nx">FieldDefinitionData</span> <span class="nv">$data</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$fieldDefinitionForm</span>
+        <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">'minLength'</span><span class="p">,</span> <span class="nx">IntegerType</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s1">'required'</span> <span class="o">=&gt;</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s1">'property_path'</span> <span class="o">=&gt;</span> <span class="s1">'validatorConfiguration[QuestionLengthValidator][minStringLength]'</span><span class="p">,</span>
+            <span class="s1">'label'</span> <span class="o">=&gt;</span> <span class="s1">'field_definition.ezpoll.min_length'</span><span class="p">,</span>
+            <span class="s1">'attr'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'min'</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Add an extra tag definition in <code class="highlighter-rouge">fieldtypes.yml</code> to tell the system that the <code class="highlighter-rouge">FormMapper</code> right now works also as <code class="highlighter-rouge">FieldDefinitionFormMapper</code>.</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundle/Resources/config/fieldtypes.yml</span>
+<span class="na">services</span><span class="pi">:</span>
+    <span class="s">...</span>
+    <span class="s">AppBundle\eZ\Publish\FieldType\Poll\FormMapper</span><span class="pi">:</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="s">...</span>
+            <span class="s">- {name</span><span class="pi">:</span> <span class="s">ez.fieldFormMapper.definition, fieldType</span><span class="pi">:</span> <span class="s">ezpoll}</span>
+</code></pre></div></div>
+
+<h3 id="add-field-definition-edit-view">Add Field definition edit view</h3>
+<div class="language-twig highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">{# AppBundle/Resources/views/platformui/content_type/edit/ezpoll.html.twig #}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">ezpoll_field_definition_edit</span> <span class="cp">%}</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ezpoll-validator answer_limit</span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">group_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">empty</span> <span class="cp">%}</span><span class="s"> </span><span class="cp">{{</span> <span class="nv">group_class</span> <span class="cp">}}{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="s">"</span><span class="nt">&gt;</span>
+        <span class="cp">{{</span><span class="o">-</span> <span class="nv">form_row</span><span class="p">(</span><span class="nv">form.answerLimit</span><span class="p">)</span> <span class="o">-</span><span class="cp">}}</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+
+</code></pre></div></div>
+
+<p>Register the new template in the configuration by editing the <code class="highlighter-rouge">ez_field_templates.yml</code> file</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># AppBundleResources/config/ez_field_templates.yml</span>
+<span class="na">system</span><span class="pi">:</span>
+    <span class="na">admin_group</span><span class="pi">:</span>
+        <span class="na">fielddefinition_edit_templates</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">template</span><span class="pi">:</span> <span class="nv">AppBundle</span><span class="pi">:</span><span class="nv">platformui/content_type/edit</span><span class="pi">:</span><span class="nv">ezpoll.html.twig</span><span class="pi">,</span> <span class="nv">priority</span><span class="pi">:</span> <span class="nv">0</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<h4 id="implement-tostoragefielddefinition-and-tofielddefinition-methods-in-legacyconverter">Implement <code class="highlighter-rouge">toStorageFieldDefinition()</code> and <code class="highlighter-rouge">toFieldDefinition()</code> methods in <code class="highlighter-rouge">LegacyConverter</code></h4>
+<p>to make sure that validation data is properly saved into and retrieved from the database</p>
+
+<p><code class="highlighter-rouge">toStorageFieldDefinition()</code> converts a Field definition to a legacy one using the proper field, e.g. <code class="highlighter-rouge">dataText1</code>, <code class="highlighter-rouge">dataInt1</code>.</p>
+
+<p><code class="highlighter-rouge">toFieldDefinition()</code> converts a stored legacy Field definition to an API Field definition (which means converting it back to an array according to validation schema).</p>
+
+<p><img src="assets/img/we-get-it-done.jpeg" alt="We get it done" /></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Notifications | mikadamczyk.github.io</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="Notifications" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/presentations/extending-ez-platform-ui/slides/notifications.html" />
+<meta property="og:url" content="http://localhost:4000/presentations/extending-ez-platform-ui/slides/notifications.html" />
+<meta property="og:site_name" content="mikadamczyk.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/notifications.html","headline":"Notifications","@type":"WebPage","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=77f374eff6625557aeb40b1a914c0570328a44c9">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">mikadamczyk.github.io</a></h1>
+      
+
+      <h2 id="notifications">Notifications</h2>
+<h4 id="are-sent-to-a-specific-user-they-will-appear-in-their-profile-in-the-back-office">are sent to a specific user. They will appear in their profile in the Back Office.</h4>
+
+<p><img src="assets/img/notification.png" alt="notification" /></p>
+
+<h5 id="inject-notificationservice">inject <code class="highlighter-rouge">NotificationService</code></h5>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Controller/PollController.php
+</span><span class="k">use</span> <span class="nx">eZ\Publish\API\Repository\NotificationService</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span> <span class="nx">NotificationService</span> <span class="nv">$notificationService</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">notificationService</span> <span class="o">=</span> <span class="nv">$notificationService</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h5 id="create-notifications-createstruct">create notification’s <code class="highlighter-rouge">CreateStruct</code></h5>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Controller/PollController.php
+</span>
+<span class="nv">$notificationStruct</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CreateStruct</span><span class="p">();</span>
+<span class="nv">$notificationStruct</span><span class="o">-&gt;</span><span class="na">ownerId</span> <span class="o">=</span> <span class="nv">$sendToUserId</span><span class="p">;</span>
+<span class="nv">$notificationStruct</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">=</span> <span class="s1">'Poll:Vote'</span><span class="p">;</span>
+<span class="nv">$notificationStruct</span><span class="o">-&gt;</span><span class="na">data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'fieldId'</span> <span class="o">=&gt;</span> <span class="nv">$pollData</span><span class="o">-&gt;</span><span class="na">getFieldId</span><span class="p">(),</span>
+    <span class="s1">'question'</span> <span class="o">=&gt;</span> <span class="nv">$pollData</span><span class="o">-&gt;</span><span class="na">getQuestion</span><span class="p">()</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h5 id="use-createnotification-method">use <code class="highlighter-rouge">createNotification()</code> method</h5>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Controller/PollController.php
+</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">notificationService</span><span class="o">-&gt;</span><span class="na">createNotification</span><span class="p">(</span><span class="nv">$notificationStruct</span><span class="p">);</span>
+
+</code></pre></div></div>
+
+<h5 id="to-display-the-notification-write-a-renderer-and-tag-it-as-a-service">To display the notification, write a Renderer and tag it as a service</h5>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="nx">eZ\Publish\Core\Notification\Renderer\NotificationRenderer</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Renderer</span> <span class="k">implements</span> <span class="nx">NotificationRenderer</span> <span class="p">{</span>
+    
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">render</span><span class="p">(</span><span class="nx">Notification</span> <span class="nv">$notification</span><span class="p">)</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">generateUrl</span><span class="p">(</span><span class="nx">Notification</span> <span class="nv">$notification</span><span class="p">)</span><span class="o">:</span> <span class="o">?</span><span class="nx">string</span> <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="add-notifications-template">add notification’s template</h4>
+
+<div class="language-twig highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">{# Resources/views/notification/notification_row.html.twig #}</span>
+
+<span class="cp">{%</span> <span class="k">extends</span> <span class="s1">'@EzPlatformAdminUi/notifications/notification_row.html.twig'</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">icon</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">message</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+
+</code></pre></div></div>
+
+<h4 id="add-an-entry-to-servicesyml">add an entry to <code class="highlighter-rouge">services.yml</code></h4>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+
+<span class="s">AppBundle\Notification\Renderer</span><span class="pi">:</span>
+    <span class="na">tags</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ezpublish.notification.renderer</span><span class="pi">,</span> <span class="nv">alias</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Poll:Vote'</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>
