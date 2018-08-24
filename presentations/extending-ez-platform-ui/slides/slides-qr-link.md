@@ -1,3 +1,3 @@
-Slides are available at: https://mikadamczyk.github.io/ezconf2018-api/
+Slides are available at: https://mikadamczyk.github.io/presentations/extending-ez-platform-ui
 
-![https://alongosz.github.io/ezconf2018-api/](assets/img/slides-qr-link.png)
+![https://mikadamczyk.github.io/presentations/extending-ez-platform-ui/](assets/img/mikadamczyk-extending-ez-platform-ui.png)
