@@ -3,14 +3,14 @@
 
 
 ### Creating a `PollVote` Entity Class
-
+#### We need those properties to represent vote
 - question
 - answer
 - fieldId
 - contentId
 
 ```bash
-bin/console doctrine:schema:update --dump-sq
+bin/console doctrine:schema:update --dump-sql
 ```
 
 
