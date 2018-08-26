@@ -17,7 +17,7 @@
 {"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/field-type-site.html","headline":"Poll Field Type","@type":"WebPage","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=b6c5f457769865995a5bddaa9141f74d611e7217">
+    <link rel="stylesheet" href="/assets/css/style.css?v=89b9c39cc2d66050cc93eb512e9e3e7d274bb676">
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -29,7 +29,7 @@
 <h3 id="site">site</h3>
 
 <h3 id="creating-a-pollvote-entity-class">Creating a <code class="highlighter-rouge">PollVote</code> Entity Class</h3>
-
+<h4 id="we-need-those-properties-to-represent-votes">We need those properties to represent votes</h4>
 <ul>
   <li>question</li>
   <li>answer</li>
@@ -37,7 +37,7 @@
   <li>contentId</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/console doctrine:schema:update <span class="nt">--dump-sq</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/console doctrine:schema:update <span class="nt">--dump-sql</span>
 </code></pre></div></div>
 
 <h3 id="final-class-pollvoterepository">Final class <code class="highlighter-rouge">PollVoteRepository</code></h3>

@@ -17,7 +17,7 @@
 {"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html","headline":"Custom permissions","@type":"WebPage","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=b6c5f457769865995a5bddaa9141f74d611e7217">
+    <link rel="stylesheet" href="/assets/css/style.css?v=89b9c39cc2d66050cc93eb512e9e3e7d274bb676">
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -32,8 +32,20 @@
 
 <h3 id="pollpolicyprovider">PollPolicyProvider</h3>
 <h4 id="must-implement-policyproviderinterface">must implement <code class="highlighter-rouge">PolicyProviderInterface</code></h4>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Security/PollPolicyProvider.php
+</span><span class="k">use</span> <span class="nx">eZ\Bundle\EzPublishCoreBundle\DependencyInjection\Configuration\ConfigBuilderInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">eZ\Bundle\EzPublishCoreBundle\DependencyInjection\Security\PolicyProvider\PolicyProviderInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PollPolicyProvider</span> <span class="k">implements</span> <span class="nx">PolicyProviderInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">addPolicies</span><span class="p">(</span><span class="nx">ConfigBuilderInterface</span> <span class="nv">$configBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3 id="poll-policy-configuration-hash">Poll Policy configuration hash</h3>
+<p>Policies configuration hash contains declared modules, functions and limitations</p>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="p">[</span>
         <span class="s1">'poll'</span> <span class="o">=&gt;</span> <span class="p">[</span>
             <span class="s1">'list'</span> <span class="o">=&gt;</span> <span class="kc">null</span><span class="p">,</span>
@@ -42,19 +54,180 @@
     <span class="p">];</span>
 </code></pre></div></div>
 
-<h3 id="integrating-the-policyprovider-into-ezpublishcorebundle">Integrating the <code class="highlighter-rouge">PolicyProvider</code> into <code class="highlighter-rouge">EzPublishCoreBundle</code></h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
+<h4 id="integrating-the-policyprovider-into-ezpublishcorebundle">Integrating the <code class="highlighter-rouge">PolicyProvider</code> into <code class="highlighter-rouge">EzPublishCoreBundle</code></h4>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle.php
+</span><span class="k">public</span> <span class="k">function</span> <span class="nf">build</span><span class="p">(</span><span class="nx">ContainerBuilder</span> <span class="nv">$container</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">build</span><span class="p">(</span><span class="nv">$container</span><span class="p">);</span>
 
-        // Retrieve "ezpublish" container extension.
-        $eZExtension = $container-&gt;getExtension('ezpublish');
+    <span class="c1">// Retrieve "ezpublish" container extension.
+</span>    <span class="nv">$eZExtension</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">getExtension</span><span class="p">(</span><span class="s1">'ezpublish'</span><span class="p">);</span>
 
-        // Add the policy provider.
-        $eZExtension-&gt;addPolicyProvider(
-            new PollPolicyProvider()
-        );
-    }
+    <span class="c1">// Add the policy provider.
+</span>    <span class="nv">$eZExtension</span><span class="o">-&gt;</span><span class="na">addPolicyProvider</span><span class="p">(</span>
+        <span class="k">new</span> <span class="nx">PollPolicyProvider</span><span class="p">()</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Add policy check to the <code class="highlighter-rouge">PollVoteRepository</code> methods</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Repository/PollVoteRepository.php
+</span><span class="k">public</span> <span class="k">function</span> <span class="nf">findAllOrderedByQuestion</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">permissionResolver</span><span class="o">-&gt;</span><span class="na">hasAccess</span><span class="p">(</span><span class="s1">'poll'</span><span class="p">,</span> <span class="s1">'list'</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">UnauthorizedException</span><span class="p">(</span><span class="s1">'poll'</span><span class="p">,</span> <span class="s1">'list'</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="custom-limitation">Custom Limitation</h3>
+<h5 id="provide-the-restrictions-you-can-apply-to-a-given-access-right">provide the restrictions you can apply to a given access right</h5>
+<p>to limit the right according to certain conditions</p>
+<blockquote>
+  <p><code class="highlighter-rouge">QuestionLimitation</code> represents the value
+<code class="highlighter-rouge">QuestionLimitationType</code> deals with the business logic</p>
+</blockquote>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="nx">eZ\Publish\API\Repository\Values\User\Limitation</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">QuestionLimitation</span> <span class="k">extends</span> <span class="nx">Limitation</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">QUESTION</span> <span class="o">=</span> <span class="s1">'Question'</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getIdentifier</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">self</span><span class="o">::</span><span class="na">QUESTION</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="questionlimitationtype"><code class="highlighter-rouge">QuestionLimitationType</code></h3>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Security/Limitation/QuestionLimitationType.php
+</span>
+<span class="k">use</span> <span class="nx">eZ\Publish\Core\Limitation\AbstractPersistenceLimitationType</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">eZ\Publish\SPI\Limitation\Type</span> <span class="k">as</span> <span class="nx">SPILimitationTypeInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">QuestionLimitationType</span> 
+    <span class="k">extends</span> <span class="nx">AbstractPersistenceLimitationType</span> 
+    <span class="k">implements</span> <span class="nx">SPILimitationTypeInterface</span>
+</code></pre></div></div>
+
+<h3 id="acceptvalue"><code class="highlighter-rouge">acceptValue()</code></h3>
+<p>Accepts a Limitation value and checks for structural validity. Makes sure 
+<code class="highlighter-rouge">LimitationValue</code> object and <code class="highlighter-rouge">LimitationValue-&gt;limitationValues</code> is of correct type.</p>
+
+<h3 id="validate"><code class="highlighter-rouge">validate()</code></h3>
+<p>Makes sure <code class="highlighter-rouge">LimitationValue-&gt;limitationValues</code> is valid according to valueSchema().</p>
+
+<h3 id="buildvalue"><code class="highlighter-rouge">buildValue()</code></h3>
+<p>Create the Limitation Value.</p>
+
+<h3 id="evaluate"><code class="highlighter-rouge">evaluate()</code></h3>
+<p>Evaluate permission against content &amp; target(placement/parent/assignment).</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">function</span> <span class="nf">evaluate</span><span class="p">(</span>
+    <span class="nx">APILimitationValue</span> <span class="nv">$value</span><span class="p">,</span> 
+    <span class="nx">APIUserReference</span> <span class="nv">$currentUser</span><span class="p">,</span>
+    <span class="nx">ValueObject</span> <span class="nv">$object</span><span class="p">,</span> 
+    <span class="k">array</span> <span class="nv">$targets</span> <span class="o">=</span> <span class="nx">nullss</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="nb">in_array</span><span class="p">(</span><span class="nv">$object</span><span class="o">-&gt;</span><span class="na">contentInfo</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span> <span class="nv">$value</span><span class="o">-&gt;</span><span class="na">limitationValues</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="limitations-need-to-be-implemented-as-limitation-types-and-declared-as-services-identified-with-ezpublishlimitationtype-tag">Limitations need to be implemented as Limitation types and declared as services identified with ezpublish.limitationType tag.</h4>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+    <span class="s">AppBundle\Security\Limitation\QuestionLimitationType</span><span class="pi">:</span>
+        <span class="na">arguments</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">@ezpublish.api.persistence_handler"</span><span class="pi">]</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span><span class="nv">name</span><span class="pi">:</span> <span class="nv">ezpublish.limitationType</span><span class="pi">,</span> <span class="nv">alias</span><span class="pi">:</span> <span class="nv">Question</span> <span class="pi">}</span>
+            
+<span class="c1"># Name provided in the hash for each Limitation is the same </span>
+<span class="c1"># value set in the alias attribute in the service tag.</span>
+
+</code></pre></div></div>
+
+<h3 id="integrating-custom-limitation-types-with-the-ui">Integrating custom Limitation types with the UI</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="nx">eZ\Publish\API\Repository\Values\User\Limitation</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Form\FormInterface</span><span class="p">;</span>
+
+<span class="c1">// Provide support for editing custom policies in Platform UI
+</span><span class="k">interface</span> <span class="nx">LimitationFormMapperInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mapLimitationForm</span><span class="p">(</span><span class="nx">FormInterface</span> <span class="nv">$form</span><span class="p">,</span> <span class="nx">Limitation</span> <span class="nv">$data</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getFormTemplate</span><span class="p">();</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">filterLimitationValues</span><span class="p">(</span><span class="nx">Limitation</span> <span class="nv">$limitation</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="register-the-service-in-dic-with-the-ezlimitationformmapper-tag">Register the service in DIC with the <code class="highlighter-rouge">ez.limitation.formMapper</code> tag</h4>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+    <span class="s">AppBundle\Security\Limitation\Mapper\QuestionLimitationFormMapper</span><span class="pi">:</span>
+        <span class="na">calls</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">[</span><span class="nv">setFormTemplate</span><span class="pi">,</span> <span class="pi">[</span><span class="s2">"</span><span class="s">EzSystemsRepositoryFormsBundle:Limitation:base_limitation_values.html.twig"</span><span class="pi">]]</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ez.limitation.formMapper</span><span class="pi">,</span> <span class="nv">limitationType</span><span class="pi">:</span> <span class="nv">Question</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>set the limitationType attribute to the Limitation type’s identifier and set Twig template to use to render the limitation form</p>
+
+<p>We are extending <code class="highlighter-rouge">MultipleSelectionBasedMapper</code> to choose multiple polls</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Security/Limitation/Mapper/QuestionLimitationFormMapper.php
+</span><span class="k">class</span> <span class="nc">QuestionLimitationFormMapper</span> <span class="k">extends</span> <span class="nx">MultipleSelectionBasedMapper</span> <span class="k">implements</span> <span class="nx">LimitationValueMapperInterface</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">getSelectionChoices()</code> returns value choices to display, as expected by the “choices” option from Choice field.</p>
+
+<p>To provide human-readable names of the custom Limitation values, we will implement <code class="highlighter-rouge">LimitationValueMapperInterface</code></p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">interface</span> <span class="nx">LimitationValueMapperInterface</span>
+<span class="p">{</span>
+    <span class="sd">/**
+     * Map the limitation values, in order to pass them 
+     * as context of limitation value rendering.
+     *
+     * @param Limitation $limitation
+     * @return mixed[]
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mapLimitationValue</span><span class="p">(</span><span class="nx">Limitation</span> <span class="nv">$limitation</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>register the service in DIC with the <code class="highlighter-rouge">ez.limitation.valueMapper tag</code><br />
+and set the <code class="highlighter-rouge">limitationType</code> attribute to Limitation type’s identifier</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+    <span class="s">AppBundle\Security\Limitation\Mapper\QuestionLimitationFormMapper</span><span class="pi">:</span>
+        <span class="s">...</span>
+        <span class="s">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ez.limitation.valueMapper</span><span class="pi">,</span> <span class="nv">limitationType</span><span class="pi">:</span> <span class="nv">Question</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>override the way of rendering custom Limitation values in the role view</p>
+<div class="language-twig highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Resources/views/Limitation/question_limitation_value.html.twig
+
+<span class="cp">{%</span> <span class="k">block</span> <span class="nv">ez_limitation_question_value</span> <span class="cp">%}</span>
+    <span class="nt">&lt;span&gt;</span><span class="cp">{{</span> <span class="nv">values</span><span class="o">|</span><span class="nf">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)</span> <span class="cp">}}</span><span class="nt">&lt;/span&gt;</span>
+<span class="cp">{%</span> <span class="k">endblock</span> <span class="cp">%}</span>
+
+
+</code></pre></div></div>
+
+<p>Add the template to the configuration</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/ez_field_templates.yml</span>
+<span class="na">ezpublish</span><span class="pi">:</span>
+    <span class="na">system</span><span class="pi">:</span>
+        <span class="na">admin_group</span><span class="pi">:</span>
+            <span class="s">...</span>
+            <span class="s">limitation_value_templates</span><span class="pi">:</span>
+                <span class="pi">-</span> <span class="pi">{</span> <span class="nv">template</span><span class="pi">:</span> <span class="nv">AppBundle</span><span class="pi">:</span><span class="nv">Limitation</span><span class="pi">:</span><span class="nv">question_limitation_value.html.twig</span><span class="pi">,</span> <span class="nv">priority</span><span class="pi">:</span> <span class="nv">0</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 
