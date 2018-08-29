@@ -1,8 +1,24 @@
 ## Custom permissions
 ### Roles, Policies and Limitations
+Note: 
+eZ Platform's uses the concept of Roles and Policies in order to authorize a User 
+to do something (e.g. read content). I will try to focus mostly on Policies. 
 
 
-A bundle can expose Policies via a `PolicyProvider` which can be added to `EzPublishCoreBundle`'s DIC extension.
+A Role is composed of Policies and can be assigned to a User or a User Group.
+
+
+A Policy is composed of a combination of module and function.
+
+
+Depending on module and function combination, a Policy can also contain Limitations.
+
+
+A bundle can expose Policies via a `PolicyProvider` which can be added to 
+`EzPublishCoreBundle`'s DIC extension.
+Note:
+We can do this in AppBundle class. In the build method we can retrieve "ezpublish" 
+container extension. Then we can add a new policy provider to the internal collection.
 
 
 ### PollPolicyProvider
@@ -19,6 +35,8 @@ class PollPolicyProvider implements PolicyProviderInterface
     }
 }
 ```
+Note:
+ConfigBuilder is used to add or extend configuration
 
 
 ### Poll Policy configuration hash
@@ -31,6 +49,10 @@ Policies configuration hash contains declared modules, functions and limitations
         ],
     ];
 ```
+Note:
+In our case 'poll' is a module, list and show are functions and Question is 
+the name of custom Limitation. With this configuration we should be able to 
+grant or denied access to voting result list or to selected result.  
 
 
 #### Integrating the `PolicyProvider` into `EzPublishCoreBundle`
@@ -49,6 +71,8 @@ public function build(ContainerBuilder $container)
     );
 }
 ```
+Note:
+We will add PolicyProvider to `EzPublishCoreBundle`s DIC extension to expose a custom Policy.
 
 
 Add policy check to the `PollVoteRepository` methods
@@ -63,11 +87,12 @@ public function findAllOrderedByQuestion()
     ...
 }
 ```
+Note:
+Now we check if user has access to fetch voting results.
 
 
 ### Custom Limitation
-##### provide the restrictions you can apply to a given access right 
-to limit the right according to certain conditions
+#### provide the restrictions you can apply to a given access right to limit the right according to certain conditions
 - `QuestionLimitation` represents the value
 - `QuestionLimitationType` deals with the business logic
 
