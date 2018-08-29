@@ -2,14 +2,15 @@
 ### Creating a voting results list
 Note:
 We will create a list with all voting results. To do this we will need two 
-new methods in PollController,   
+new methods in PollController
+
 
 ### Bootstrap
 We rely on Bootstrap's framework which makes eZ Platform UI easier to extend. 
-It facilitates adapting and styling the interface to your needs.
+It facilitates adapting and styling the interface to your needs.   
 
 Note: 
-In our Admin UI v2 we are using Bootstrap in version 4.
+In our Admin UI v2 we are using Bootstrap in version 4.      
 
 
 ### Add routing to list
