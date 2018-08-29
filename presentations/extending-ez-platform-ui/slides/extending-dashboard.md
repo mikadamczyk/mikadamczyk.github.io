@@ -24,7 +24,7 @@ services:
 use EzSystems\EzPlatformAdminUi\Tab\AbstractTab;
 use EzSystems\EzPlatformAdminUi\Tab\OrderedTabInterface;
 
-class EveryoneArticleTab extends AbstractTab implements OrderedTabInterface
+class EveryonePollTab extends AbstractTab implements OrderedTabInterface
 ```
 
 

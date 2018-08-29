@@ -17,7 +17,7 @@
 {"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html","headline":"Custom permissions","@type":"WebPage","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=23515141742b27efdfdcc07d9d4d9d77ce4780c2">
+    <link rel="stylesheet" href="/assets/css/style.css?v=95c917c09196046e6b6a008d1125bdee1c3f7458">
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -27,8 +27,21 @@
 
       <h2 id="custom-permissions">Custom permissions</h2>
 <h3 id="roles-policies-and-limitations">Roles, Policies and Limitations</h3>
+<p>Note: 
+eZ Platform’s uses the concept of Roles and Policies in order to authorize a User 
+to do something (e.g. read content). I will try to focus mostly on Policies.</p>
 
-<p>A bundle can expose Policies via a <code class="highlighter-rouge">PolicyProvider</code> which can be added to <code class="highlighter-rouge">EzPublishCoreBundle</code>’s DIC extension.</p>
+<p>A Role is composed of Policies and can be assigned to a User or a User Group.</p>
+
+<p>A Policy is composed of a combination of module and function.</p>
+
+<p>Depending on module and function combination, a Policy can also contain Limitations.</p>
+
+<p>A bundle can expose Policies via a <code class="highlighter-rouge">PolicyProvider</code> which can be added to 
+<code class="highlighter-rouge">EzPublishCoreBundle</code>’s DIC extension.
+Note:
+We can do this in AppBundle class. In the build method we can retrieve “ezpublish” 
+container extension. Then we can add a new policy provider to the internal collection.</p>
 
 <h3 id="pollpolicyprovider">PollPolicyProvider</h3>
 <h4 id="must-implement-policyproviderinterface">must implement <code class="highlighter-rouge">PolicyProviderInterface</code></h4>
@@ -43,6 +56,8 @@
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<p>Note:
+ConfigBuilder is used to add or extend configuration</p>
 
 <h3 id="poll-policy-configuration-hash">Poll Policy configuration hash</h3>
 <p>Policies configuration hash contains declared modules, functions and limitations</p>
@@ -53,6 +68,10 @@
         <span class="p">],</span>
     <span class="p">];</span>
 </code></pre></div></div>
+<p>Note:
+In our case ‘poll’ is a module, list and show are functions and Question is 
+the name of custom Limitation. With this configuration we should be able to 
+grant or denied access to voting result list or to selected result.</p>
 
 <h4 id="integrating-the-policyprovider-into-ezpublishcorebundle">Integrating the <code class="highlighter-rouge">PolicyProvider</code> into <code class="highlighter-rouge">EzPublishCoreBundle</code></h4>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AppBundle.php
@@ -69,6 +88,8 @@
     <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<p>Note:
+We will add PolicyProvider to <code class="highlighter-rouge">EzPublishCoreBundle</code>s DIC extension to expose a custom Policy.</p>
 
 <p>Add policy check to the <code class="highlighter-rouge">PollVoteRepository</code> methods</p>
 
@@ -81,6 +102,8 @@
     <span class="o">...</span>
 <span class="p">}</span>
 </code></pre></div></div>
+<p>Note:
+Now we check if user has access to fetch voting results.</p>
 
 <h3 id="custom-limitation">Custom Limitation</h3>
 <h4 id="provide-the-restrictions-you-can-apply-to-a-given-access-right-to-limit-the-right-according-to-certain-conditions">provide the restrictions you can apply to a given access right to limit the right according to certain conditions</h4>
