@@ -17,7 +17,7 @@
 {"url":"http://localhost:4000/presentations/extending-ez-platform-ui/slides/permissions.html","headline":"Custom permissions","@type":"WebPage","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=89b9c39cc2d66050cc93eb512e9e3e7d274bb676">
+    <link rel="stylesheet" href="/assets/css/style.css?v=23515141742b27efdfdcc07d9d4d9d77ce4780c2">
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -83,12 +83,13 @@
 </code></pre></div></div>
 
 <h3 id="custom-limitation">Custom Limitation</h3>
-<h5 id="provide-the-restrictions-you-can-apply-to-a-given-access-right">provide the restrictions you can apply to a given access right</h5>
-<p>to limit the right according to certain conditions</p>
-<blockquote>
-  <p><code class="highlighter-rouge">QuestionLimitation</code> represents the value
-<code class="highlighter-rouge">QuestionLimitationType</code> deals with the business logic</p>
-</blockquote>
+<h4 id="provide-the-restrictions-you-can-apply-to-a-given-access-right-to-limit-the-right-according-to-certain-conditions">provide the restrictions you can apply to a given access right to limit the right according to certain conditions</h4>
+<ul>
+  <li><code class="highlighter-rouge">QuestionLimitation</code> represents the value</li>
+  <li><code class="highlighter-rouge">QuestionLimitationType</code> deals with the business logic</li>
+</ul>
+
+<h3 id="questionlimitation-class"><code class="highlighter-rouge">QuestionLimitation</code> class</h3>
 
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="nx">eZ\Publish\API\Repository\Values\User\Limitation</span><span class="p">;</span>
 
@@ -111,20 +112,22 @@
 
 <span class="k">class</span> <span class="nc">QuestionLimitationType</span> 
     <span class="k">extends</span> <span class="nx">AbstractPersistenceLimitationType</span> 
-    <span class="k">implements</span> <span class="nx">SPILimitationTypeInterface</span>
+    <span class="k">implements</span> <span class="nx">SPILimitationTypeInterface</span> <span class="p">{</span>
+    
+    <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="acceptvalue"><code class="highlighter-rouge">acceptValue()</code></h3>
+<h4 id="acceptvalue"><code class="highlighter-rouge">acceptValue()</code></h4>
 <p>Accepts a Limitation value and checks for structural validity. Makes sure 
 <code class="highlighter-rouge">LimitationValue</code> object and <code class="highlighter-rouge">LimitationValue-&gt;limitationValues</code> is of correct type.</p>
 
-<h3 id="validate"><code class="highlighter-rouge">validate()</code></h3>
+<h4 id="validate"><code class="highlighter-rouge">validate()</code></h4>
 <p>Makes sure <code class="highlighter-rouge">LimitationValue-&gt;limitationValues</code> is valid according to valueSchema().</p>
 
-<h3 id="buildvalue"><code class="highlighter-rouge">buildValue()</code></h3>
+<h4 id="buildvalue"><code class="highlighter-rouge">buildValue()</code></h4>
 <p>Create the Limitation Value.</p>
 
-<h3 id="evaluate"><code class="highlighter-rouge">evaluate()</code></h3>
+<h4 id="evaluate"><code class="highlighter-rouge">evaluate()</code></h4>
 <p>Evaluate permission against content &amp; target(placement/parent/assignment).</p>
 
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">function</span> <span class="nf">evaluate</span><span class="p">(</span>

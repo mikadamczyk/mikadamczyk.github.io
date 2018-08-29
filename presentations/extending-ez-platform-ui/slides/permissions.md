@@ -64,12 +64,14 @@ public function findAllOrderedByQuestion()
 }
 ```
 
-### Custom Limitation
-##### provide the restrictions you can apply to a given access right 
-to limit the right according to certain conditions
-> `QuestionLimitation` represents the value
-> `QuestionLimitationType` deals with the business logic
 
+### Custom Limitation
+#### provide the restrictions you can apply to a given access right to limit the right according to certain conditions
+- `QuestionLimitation` represents the value
+- `QuestionLimitationType` deals with the business logic
+
+
+### `QuestionLimitation` class
 
 ```php
 use eZ\Publish\API\Repository\Values\User\Limitation;
@@ -95,24 +97,26 @@ use eZ\Publish\SPI\Limitation\Type as SPILimitationTypeInterface;
 
 class QuestionLimitationType 
     extends AbstractPersistenceLimitationType 
-    implements SPILimitationTypeInterface
+    implements SPILimitationTypeInterface {
+    
+    }
 ```
 
 
-### `acceptValue()` 
+#### `acceptValue()` 
 Accepts a Limitation value and checks for structural validity. Makes sure 
 `LimitationValue` object and `LimitationValue->limitationValues` is of correct type.
 
 
-### `validate()` 
+#### `validate()` 
 Makes sure `LimitationValue->limitationValues` is valid according to valueSchema().
 
 
-### `buildValue()` 
+#### `buildValue()` 
 Create the Limitation Value.
 
 
-### `evaluate()`
+#### `evaluate()`
 Evaluate permission against content & target(placement/parent/assignment).
 
 ```php

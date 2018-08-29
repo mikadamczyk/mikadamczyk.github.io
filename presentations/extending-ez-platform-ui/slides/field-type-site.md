@@ -3,7 +3,7 @@
 
 
 ### Creating a `PollVote` Entity Class
-#### We need those properties to represent votes
+#### We need those properties to represent vote
 - question
 - answer
 - fieldId
