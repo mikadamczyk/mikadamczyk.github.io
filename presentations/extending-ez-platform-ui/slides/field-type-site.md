@@ -80,6 +80,7 @@ FormFactory class. It will create form for us. We will create 'createPollForm'.
 It will receive data class, the name of the form and answers which we will set as an
 one of the options.
 
+
 ### Create a controller
 #### `PollController::voteAction()`
 We need a new method in it to handle voting action.
