@@ -219,8 +219,6 @@ e.g. validating and transforming data</p>
             <span class="pi">-</span> <span class="pi">{</span> <span class="nv">template</span><span class="pi">:</span> <span class="s1">'</span><span class="s">AppBundle:platformui/field:ezpoll_view.html.twig'</span><span class="pi">,</span> <span class="nv">priority</span><span class="pi">:</span> <span class="nv">0</span> <span class="pi">}</span>
 </code></pre></div></div>
 
-<p>we do</p>
-
 <h3 id="adding-and-editing-the-field-in-back-office">Adding and editing the Field in Back Office</h3>
 
 <p>We need to create a <code class="highlighter-rouge">FormMapper</code> with <code class="highlighter-rouge">FieldValueFormMapperInterface</code>. It is used to automatically add the input field to the Content Type edit form.</p>
@@ -376,6 +374,36 @@ that allows us to define the necessary input field.</p>
 <p><code class="highlighter-rouge">toStorageFieldDefinition()</code> converts a Field definition to a legacy one using the proper field, e.g. <code class="highlighter-rouge">dataText1</code>, <code class="highlighter-rouge">dataInt1</code>.</p>
 
 <p><code class="highlighter-rouge">toFieldDefinition()</code> converts a stored legacy Field definition to an API Field definition (which means converting it back to an array according to validation schema).</p>
+
+<h3 id="components">Components</h3>
+<p>Components enable you to inject widgets (e.g. Dashboard blocks) and HTML code 
+(e.g. a tag for loading JS or CSS files) into specific places in the Back Office</p>
+
+<p>A component is any class that implements the <code class="highlighter-rouge">Renderable</code> interface. It must be 
+tagged as a service:</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Resources/config/services.yml</span>
+    <span class="s">EzSystems\EzPlatformAdminUi\Component\TwigComponent</span><span class="pi">:</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ezplatform.admin_ui.component</span><span class="pi">,</span> <span class="nv">group</span><span class="pi">:</span> <span class="s1">'</span><span class="s">content-edit-form-after'</span> <span class="pi">}</span>
+
+</code></pre></div></div>
+
+<p>If you want to inject a short element, render a Twig template or add a CSS link, 
+you can make use of pre-existing base classes. You need to add a service definition 
+with proper parameters.</p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="s">EzSystems\EzPlatformAdminUi\Component\TwigComponent</span><span class="pi">:</span>
+        <span class="na">arguments</span><span class="pi">:</span>
+            <span class="s">$template</span><span class="pi">:</span> <span class="s1">'</span><span class="s">AppBundle:adminui/component:ezpoll_edit_js.html.twig'</span>
+            <span class="s">$parameters</span><span class="pi">:</span> <span class="pi">[]</span>
+        <span class="na">tags</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">ezplatform.admin_ui.component</span><span class="pi">,</span> <span class="nv">group</span><span class="pi">:</span> <span class="s1">'</span><span class="s">content-edit-form-after'</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>There are three such base components:</p>
+<ul>
+  <li><code class="highlighter-rouge">TwigComponent</code> renders a Twig template, like above</li>
+  <li><code class="highlighter-rouge">LinkComponent</code> renders the HTML <link /> tag:</li>
+</ul>
 
 <p><img src="assets/img/we-get-it-done.jpeg" alt="We get it done" /></p>
 

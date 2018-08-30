@@ -195,7 +195,6 @@ system:
             - { template: 'AppBundle:platformui/field:ezpoll_view.html.twig', priority: 0 }
 ```
 
-we do 
 
 ### Adding and editing the Field in Back Office
 
@@ -374,6 +373,40 @@ to make sure that validation data is properly saved into and retrieved from the 
 
 
 `toFieldDefinition()` converts a stored legacy Field definition to an API Field definition (which means converting it back to an array according to validation schema).
+
+
+### Components
+Components enable you to inject widgets (e.g. Dashboard blocks) and HTML code 
+(e.g. a tag for loading JS or CSS files) into specific places in the Back Office
+
+
+A component is any class that implements the `Renderable` interface. It must be 
+tagged as a service:
+```yml
+# Resources/config/services.yml
+    EzSystems\EzPlatformAdminUi\Component\TwigComponent:
+        tags:
+            - { name: ezplatform.admin_ui.component, group: 'content-edit-form-after' }
+
+```
+
+
+If you want to inject a short element, render a Twig template or add a CSS link, 
+you can make use of pre-existing base classes. You need to add a service definition 
+with proper parameters.
+```yml
+    EzSystems\EzPlatformAdminUi\Component\TwigComponent:
+        arguments:
+            $template: 'AppBundle:adminui/component:ezpoll_edit_js.html.twig'
+            $parameters: []
+        tags:
+            - { name: ezplatform.admin_ui.component, group: 'content-edit-form-after' }
+```
+
+
+There are three such base components:
+- `TwigComponent` renders a Twig template, like above
+- `LinkComponent` renders the HTML <link> tag:
 
 
 ![We get it done](assets/img/we-get-it-done.jpeg)
